@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import CustomCursor from './CustomCursor'
 
 const images = [
   '/images/grid1.jpg',
