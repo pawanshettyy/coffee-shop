@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Loader from './components/Loader'
-
-const Home = () => <div className="p-4 text-xl">Welcome to the Coffee Shop ☕</div>
+import Home from './pages/Home'
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false)
