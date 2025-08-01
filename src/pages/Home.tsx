@@ -1,10 +1,15 @@
 import PageWrapper from '../components/PageWrapper'
 import HoverImage from '../components/HoverImage'
 import ImageGrid from '../components/ImageGrid'
+import Marquee from '../components/Marquee'
 
 export default function Home() {
   return (
     <PageWrapper>
+      <section className="mb-8">
+        <Marquee />
+      </section>
+
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">Signature Blend</h2>
         <HoverImage
