@@ -1,22 +1,42 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 export default function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isVisible, setIsVisible] = useState(false)
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    setPosition({ x: e.clientX, y: e.clientY })
+  }, [])
+
+  const handleMouseEnter = useCallback(() => {
+    setIsVisible(true)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setIsVisible(false)
+  }, [])
 
   useEffect(() => {
-    const move = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY })
+    // Use passive listeners for better performance
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    document.addEventListener('mouseenter', handleMouseEnter, { passive: true })
+    document.addEventListener('mouseleave', handleMouseLeave, { passive: true })
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseenter', handleMouseEnter)
+      document.removeEventListener('mouseleave', handleMouseLeave)
     }
-    window.addEventListener('mousemove', move)
-    return () => window.removeEventListener('mousemove', move)
-  }, [])
+  }, [handleMouseMove, handleMouseEnter, handleMouseLeave])
 
   return (
     <div
-      className="pointer-events-none fixed z-50 w-8 h-8 border-2 border-accent rounded-full transition-transform duration-150 ease-out"
+      className={`pointer-events-none fixed z-50 w-8 h-8 border-2 border-accent rounded-full transition-opacity duration-200 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
       style={{
-        top: position.y - 16,
-        left: position.x - 16,
+        transform: `translate3d(${position.x - 16}px, ${position.y - 16}px, 0)`,
+        willChange: 'transform',
       }}
     />
   )

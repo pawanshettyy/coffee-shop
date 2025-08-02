@@ -2,11 +2,17 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import LazyImage from './LazyImage'
 
+// Import team images
+import teamAvaImage from '/images/team-ava.jpg'
+import teamLiamImage from '/images/team-liam.jpg'
+import teamNoahImage from '/images/team-noah.jpg'
+import teamMayaImage from '/images/team-maya.jpg'
+
 const team = [
-  { name: 'Ava', image: '/images/team-ava.jpg' },
-  { name: 'Liam', image: '/images/team-liam.jpg' },
-  { name: 'Noah', image: '/images/team-noah.jpg' },
-  { name: 'Maya', image: '/images/team-maya.jpg' },
+  { name: 'Ava', image: teamAvaImage },
+  { name: 'Liam', image: teamLiamImage },
+  { name: 'Noah', image: teamNoahImage },
+  { name: 'Maya', image: teamMayaImage },
 ]
 
 export default function TeamSection() {

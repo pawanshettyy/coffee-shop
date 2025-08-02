@@ -17,6 +17,14 @@ import cappuccinoImage from '/images/menu-cappuccino.jpg'
 import matchaLatteImage from '/images/menu-matcha-latte.jpg'
 import blueberryMuffinImage from '/images/menu-blueberry-muffin.jpg'
 
+// Debug: Log image paths
+console.log('Image paths:', {
+  espressoImage,
+  caramelMacchiatoImage,
+  vanillaLatteImage,
+  coldBrewImage
+})
+
 // Type definitions
 interface Size {
   name: string
@@ -480,6 +488,8 @@ export default function Menu() {
                       fallback="/images/coffee-cup.jpg"
                       loading={index < 2 ? "eager" : "lazy"}
                       priority={index < 2}
+                      onError={() => console.error(`Failed to load image for ${item.name}:`, item.image)}
+                      onLoad={() => console.log(`Successfully loaded image for ${item.name}:`, item.image)}
                     />
                     
                     {/* Badges */}
