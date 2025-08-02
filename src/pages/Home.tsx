@@ -8,6 +8,7 @@ import ImageGrid from '../components/ImageGrid'
 import Marquee from '../components/Marquee'
 import ScrollText from '../components/ScrollText'
 import TeamSection from '../components/TeamSection'
+import LazyImage from '../components/LazyImage'
 import Mystery3D from '../components/Mystery3D'
 
 // Hero stats data
@@ -367,16 +368,16 @@ export default function Home() {
                   className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group"
                 >
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyImage
                       src={product.image}
                       alt={product.name}
                       loading="eager" // Eager loading for critical above-fold images
-                      decoding="async"
+                      priority={true}
+                      quality={80}
+                      width={400}
+                      height={256}
                       className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `https://images.unsplash.com/photo-${1500000000000 + product.id}?w=400&h=300&fit=crop`;
-                      }}
+                      fallback={`https://images.unsplash.com/photo-${1500000000000 + product.id}?w=400&h=300&fit=crop`}
                     />
                     {product.isPopular && (
                       <span className="absolute top-4 left-4 bg-accent text-white text-xs px-3 py-1 rounded-full font-medium">

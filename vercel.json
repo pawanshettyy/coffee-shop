@@ -18,11 +18,32 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
       ]
     },
     {
-      "source": "/images/(.*)",
+      "source": "/images/(.*\\.(jpg|jpeg|png|gif|webp|avif))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, s-maxage=31536000"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|webp|avif))",
       "headers": [
         {
           "key": "Cache-Control",
@@ -31,13 +52,18 @@
       ]
     },
     {
-      "source": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|webp))",
+      "source": "/",
       "headers": [
         {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000"
+          "key": "Link",
+          "value": "</images/coffee-cup.jpg>; rel=preload; as=image"
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "src/api/**/*.ts": {
+      "maxDuration": 10
+    }
+  }
 }

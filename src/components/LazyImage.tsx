@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { optimizeImageForVercel, generateSrcSet } from '../utils/imageOptimization'
 
 interface LazyImageProps {
   src: string
@@ -12,6 +13,9 @@ interface LazyImageProps {
   blurDataURL?: string
   sizes?: string
   srcSet?: string
+  quality?: number
+  width?: number
+  height?: number
 }
 
 export default function LazyImage({ 
@@ -25,7 +29,9 @@ export default function LazyImage({
   onError,
   blurDataURL,
   sizes = '100vw',
-  srcSet
+  srcSet,
+  quality = 75,
+  width
 }: LazyImageProps) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
@@ -34,15 +40,23 @@ export default function LazyImage({
   const imgRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // Optimize image source for Vercel
+  const optimizedSrc = src ? optimizeImageForVercel(src, width, quality) : ''
+  const optimizedSrcSet = srcSet || (src ? generateSrcSet(src) : '')
+
   // Preload critical images immediately
   useEffect(() => {
     if (priority) {
       const link = document.createElement('link')
       link.rel = 'preload'
       link.as = 'image'
-      link.href = src
-      if (srcSet) link.setAttribute('imagesrcset', srcSet)
+      link.href = optimizedSrc
+      if (optimizedSrcSet) link.setAttribute('imagesrcset', optimizedSrcSet)
       if (sizes) link.setAttribute('imagesizes', sizes)
+      
+      // Add fetchpriority for modern browsers
+      link.setAttribute('fetchpriority', 'high')
+      
       document.head.appendChild(link)
       
       return () => {
@@ -51,7 +65,7 @@ export default function LazyImage({
         }
       }
     }
-  }, [src, srcSet, sizes, priority])
+  }, [optimizedSrc, optimizedSrcSet, sizes, priority])
 
   // Intersection Observer for lazy loading
   useEffect(() => {
@@ -64,7 +78,7 @@ export default function LazyImage({
           }
         },
         {
-          rootMargin: '100px', // Load images 100px before they enter viewport
+          rootMargin: '50px', // Reduced from 100px for faster loading
           threshold: 0.01
         }
       )
@@ -77,17 +91,21 @@ export default function LazyImage({
     }
   }, [priority, loading])
 
-  // Progressive image loading with better performance
+  // Progressive image loading with Vercel optimization
   useEffect(() => {
-    if (isInView && src) {
+    if (isInView && optimizedSrc) {
       const img = new Image()
       
       // Performance optimizations
       img.decoding = 'async'
-      img.fetchPriority = priority ? 'high' : 'auto'
+      
+      // Use modern attributes safely
+      if ('fetchPriority' in img) {
+        (img as HTMLImageElement & { fetchPriority: string }).fetchPriority = priority ? 'high' : 'auto'
+      }
       
       img.onload = () => {
-        setCurrentSrc(src)
+        setCurrentSrc(optimizedSrc)
         setIsLoaded(true)
         setHasError(false)
         onLoad?.()
@@ -96,16 +114,19 @@ export default function LazyImage({
       img.onerror = () => {
         setHasError(true)
         if (fallback) {
-          setCurrentSrc(fallback)
+          const optimizedFallback = optimizeImageForVercel(fallback, width, quality)
+          setCurrentSrc(optimizedFallback)
           setIsLoaded(true)
         }
         onError?.()
       }
       
-      // Set responsive image attributes
-      if (srcSet) img.srcset = srcSet
+      // Set responsive image attributes with optimization
+      if (optimizedSrcSet) img.srcset = optimizedSrcSet
       if (sizes) img.sizes = sizes
-      img.src = src
+      
+      // Start loading the optimized image
+      img.src = optimizedSrc
       
       // Cleanup function
       return () => {
@@ -113,7 +134,7 @@ export default function LazyImage({
         img.onerror = null
       }
     }
-  }, [isInView, src, srcSet, sizes, fallback, priority, onLoad, onError])
+  }, [isInView, optimizedSrc, optimizedSrcSet, sizes, fallback, priority, onLoad, onError, quality, width])
 
   // Memory cleanup on unmount
   useEffect(() => {

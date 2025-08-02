@@ -1,4 +1,4 @@
-// Image optimization utilities for fast loading
+// Image optimization utilities for fast loading on Vercel
 
 interface ImageConfig {
   src: string
@@ -6,10 +6,54 @@ interface ImageConfig {
   quality?: number
 }
 
-// Generate responsive image srcset for different screen sizes
+// Vercel Image Optimization - automatically optimizes images
+export function optimizeImageForVercel(src: string, width?: number, quality: number = 75): string {
+  // Ensure src is valid
+  if (!src || typeof src !== 'string') {
+    console.warn('optimizeImageForVercel: Invalid src provided:', src)
+    return src || ''
+  }
+
+  // For Vercel deployment, we can use query parameters for optimization
+  const params = new URLSearchParams()
+  if (width && width > 0) params.set('w', width.toString())
+  params.set('q', quality.toString())
+  
+  // Add format optimization for modern browsers
+  if (typeof window !== 'undefined') {
+    try {
+      // Check for WebP support
+      const canvas = document.createElement('canvas')
+      const webpSupported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0
+      if (webpSupported) {
+        params.set('f', 'webp')
+      }
+    } catch (error) {
+      // Fallback if canvas creation fails
+      console.warn('WebP detection failed:', error)
+    }
+  }
+  
+  return `${src}?${params.toString()}`
+}
+
+// Generate responsive image srcset with Vercel optimization
 export function generateSrcSet(baseSrc: string, sizes: number[] = [400, 800, 1200, 1600]): string {
+  // Ensure baseSrc is valid
+  if (!baseSrc || typeof baseSrc !== 'string') {
+    console.warn('generateSrcSet: Invalid baseSrc provided:', baseSrc)
+    return ''
+  }
+
+  // Ensure sizes array is valid
+  if (!Array.isArray(sizes) || sizes.length === 0) {
+    console.warn('generateSrcSet: Invalid sizes array provided:', sizes)
+    return optimizeImageForVercel(baseSrc)
+  }
+
   return sizes
-    .map(size => `${baseSrc}?w=${size}&q=75 ${size}w`)
+    .filter(size => typeof size === 'number' && size > 0)
+    .map(size => `${optimizeImageForVercel(baseSrc, size)} ${size}w`)
     .join(', ')
 }
 
@@ -30,35 +74,48 @@ export function generateSizes(breakpoints: { [key: string]: string } = {}): stri
   return `${sizeQueries}, ${merged.default}`
 }
 
-// Create optimized image configuration
+// Create optimized image configuration with Vercel optimization
 export function createImageConfig(src: string, options: Partial<ImageConfig> = {}): ImageConfig {
   const { sizes, quality = 75 } = options
   
   return {
-    src: `${src}?q=${quality}`,
+    src: optimizeImageForVercel(src, undefined, quality),
     sizes: sizes || generateSizes(),
     quality
   }
 }
 
-// Preload critical images with proper attributes
+// Enhanced preload with better caching and priority
 export function preloadImage(src: string, priority: 'high' | 'low' = 'low'): void {
   // Check if already preloaded/prefetched
-  const existingLink = document.querySelector(`link[href="${src}"]`)
+  const baseSrc = src.split('?')[0]
+  const existingLink = document.querySelector(`link[href*="${baseSrc}"]`)
   if (existingLink) {
     return // Already preloaded
   }
+  
+  // Use optimized version for preloading
+  const optimizedSrc = optimizeImageForVercel(src, undefined, 75)
   
   // Only preload if the image will be used soon
   const link = document.createElement('link')
   link.rel = priority === 'high' ? 'preload' : 'prefetch'
   link.as = 'image'
-  link.href = src
-  link.fetchPriority = priority
+  link.href = optimizedSrc
+  
+  // Add modern attributes for better performance
+  if ('fetchPriority' in link) {
+    (link as any).fetchPriority = priority
+  }
   
   // Add crossorigin for external images
   if (src.startsWith('http')) {
     link.crossOrigin = 'anonymous'
+  }
+  
+  // Add loading attribute for better resource management
+  if ('loading' in link) {
+    (link as any).loading = priority === 'high' ? 'eager' : 'lazy'
   }
   
   document.head.appendChild(link)
