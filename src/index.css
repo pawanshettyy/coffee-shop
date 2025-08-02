@@ -11,7 +11,23 @@ body {
   box-sizing: border-box;
 }
 
-/* Smooth scrolling */
+/* Optimize font loading */
+@layer base {
+  html {
+    font-display: swap;
+  }
+}
+
+/* Critical path CSS - inline only essential styles */
+body {
+  @apply bg-cream text-coffee font-sans;
+  /* Prevent layout shifts */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scrolling with performance considerations */
 html {
   scroll-behavior: smooth;
 }
@@ -21,16 +37,26 @@ img {
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  /* Prevent layout shifts */
+  max-width: 100%;
+  height: auto;
 }
 
-/* Hardware acceleration for transforms */
-.gpu-acceleration {
+/* Hardware acceleration for transforms and animations */
+.gpu-acceleration,
+[class*="motion-"],
+[class*="animate-"] {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   will-change: transform;
 }
 
-/* Optimize animations */
+/* Optimize layout performance */
+.grid {
+  contain: layout;
+}
+
+/* Optimize animations with containment */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -39,12 +65,15 @@ img {
   }
 }
 
-/* Preload critical fonts */
-@layer base {
-  @font-face {
-    font-family: 'system-ui';
-    font-display: swap;
-  }
+/* Enhanced performance for scrolling */
+.scroll-container {
+  contain: layout style paint;
+  transform: translateZ(0);
+}
+
+/* Optimize text rendering */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
 }
 
 /* Loading skeleton animation */

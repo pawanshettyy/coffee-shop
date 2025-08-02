@@ -44,7 +44,9 @@ export default function LazyImage({
       
       observer.observe(containerRef.current)
       
-      return () => observer.disconnect()
+      return () => {
+        observer.disconnect()
+      }
     }
   }, [priority, loading])
 
@@ -75,6 +77,17 @@ export default function LazyImage({
       img.removeEventListener('error', handleError)
     }
   }, [src, isInView, onLoad, onError])
+
+  // Memory optimization: cleanup on unmount
+  useEffect(() => {
+    const currentImg = imgRef.current
+    return () => {
+      if (currentImg) {
+        currentImg.src = ''
+        currentImg.removeAttribute('src')
+      }
+    }
+  }, [])
 
   const imageSrc = hasError && fallback ? fallback : src
 
