@@ -508,9 +508,8 @@ interface TastingSession {
 **Created by**: Pawan Shetty  
 **GitHub**: [@pawanshettyy](https://github.com/pawanshettyy)  
 **LinkedIn**: [Pawan Shetty](https://linkedin.com/in/pawanshettyy)  
-**Email**: pawan@example.com  
 
-**Development Time**: [X] hours during hackathon  
+**Development Time**: [30] hours during hackathon  
 **Lines of Code**: ~2,500 lines  
 **Components**: 15+ reusable React components  
 **Custom Hooks**: 3 specialized React hooks  
