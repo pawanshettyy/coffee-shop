@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Coffee, Filter, Star, Heart, ShoppingCart, Plus, Minus, Search, Clock, Thermometer } from 'lucide-react'
@@ -221,27 +221,29 @@ export default function Menu() {
   const { addToCart: addToCartContext, cartItems, subtotal } = useCart()
   const navigate = useNavigate()
 
-  // Filter and sort menu items
-  const filteredItems = menuItems
-    .filter(item => {
-      const matchesCategory = activeCategory === 'all' || item.category === activeCategory
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesCategory && matchesSearch
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'price-low':
-          return a.price - b.price
-        case 'price-high':
-          return b.price - a.price
-        case 'rating':
-          return b.rating - a.rating
-        case 'popular':
-        default:
-          return (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0)
-      }
-    })
+  // Memoized filter and sort menu items for better performance
+  const filteredItems = useMemo(() => {
+    return menuItems
+      .filter(item => {
+        const matchesCategory = activeCategory === 'all' || item.category === activeCategory
+        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             item.description.toLowerCase().includes(searchQuery.toLowerCase())
+        return matchesCategory && matchesSearch
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'price-low':
+            return a.price - b.price
+          case 'price-high':
+            return b.price - a.price
+          case 'rating':
+            return b.rating - a.rating
+          case 'popular':
+          default:
+            return (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0)
+        }
+      })
+  }, [activeCategory, searchQuery, sortBy])
 
   const toggleFavorite = (itemId: number) => {
     setFavorites(prev => 

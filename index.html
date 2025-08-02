@@ -4,10 +4,43 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodeCraft</title>
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/images/hero-coffee-main.jpg" as="image" importance="high">
+    
+    <!-- Critical CSS will be inlined by Vite -->
+    <style>
+      /* Critical above-the-fold styles */
+      body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+      #root { min-height: 100vh; }
+      .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    </style>
+    
+    <title>Brew & Bite - Coffee Shop</title>
+    <meta name="description" content="Experience the finest coffee at Brew & Bite. Premium blends, artisanal pastries, and a cozy atmosphere.">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Initial loading state to prevent layout shift -->
+      <div class="loading">
+        <div style="text-align: center;">
+          <div style="width: 40px; height: 40px; border: 3px solid #f3f3f3; border-top: 3px solid #C69C6D; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
+          <p style="color: #4B2E2E; margin: 0;">Loading Brew & Bite...</p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
   </body>
 </html>
