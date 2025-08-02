@@ -81,7 +81,6 @@ const teamStats = [
 
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState<number | null>(null)
-  const [hoveredMember, setHoveredMember] = useState<number | null>(null)
   const [teamData, setTeamData] = useState(teamMembers)
 
   // Simulate API call to fetch team data
@@ -116,8 +115,7 @@ export default function Team() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
-        ease: [0.6, -0.05, 0.01, 0.99]
+        duration: 0.5
       }
     }
   }
@@ -129,16 +127,14 @@ export default function Team() {
       scale: 1,
       rotateY: 0,
       transition: {
-        duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99]
+        duration: 0.6
       }
     },
     hover: {
       scale: 1.05,
       rotateY: 5,
       transition: {
-        duration: 0.3,
-        ease: "easeOut"
+        duration: 0.3
       }
     }
   }
@@ -189,7 +185,7 @@ export default function Team() {
           className="py-12 mb-16"
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto px-4">
-            {teamStats.map((stat, index) => (
+            {teamStats.map((stat) => (
               <motion.div
                 key={stat.label}
                 variants={itemVariants}
@@ -216,13 +212,11 @@ export default function Team() {
           className="py-12"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
-            {teamData.map((member, index) => (
+            {teamData.map((member) => (
               <motion.div
                 key={member.id}
                 variants={cardVariants}
                 whileHover="hover"
-                onMouseEnter={() => setHoveredMember(member.id)}
-                onMouseLeave={() => setHoveredMember(null)}
                 onClick={() => setSelectedMember(member.id)}
                 className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
               >
