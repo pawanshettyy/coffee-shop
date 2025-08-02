@@ -9,7 +9,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Separate vendor libraries
+          // Separate vendor libraries for better caching
           vendor: ['react', 'react-dom', 'react-router-dom'],
           animations: ['framer-motion'],
           icons: ['lucide-react']

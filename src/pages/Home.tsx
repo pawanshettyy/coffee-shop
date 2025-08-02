@@ -458,15 +458,9 @@ export default function Home() {
                   className="text-center group"
                 >
                   <div className="relative mb-6">
-                    <img 
-                      src={step.image}
-                      alt={step.title}
-                      className="w-20 h-20 rounded-2xl mx-auto object-cover shadow-lg group-hover:shadow-xl transition-shadow"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `https://images.unsplash.com/photo-${1500000000000 + step.id}?w=80&h=80&fit=crop`;
-                      }}
-                    />
+                    <div className="w-20 h-20 rounded-2xl mx-auto bg-gradient-to-br from-coffee to-accent flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                      <step.icon size={32} className="text-white" />
+                    </div>
                     <div className="absolute -top-2 -right-2 bg-white text-coffee rounded-full p-2 shadow-lg">
                       <step.icon size={16} />
                     </div>
@@ -519,7 +513,7 @@ export default function Home() {
         </section>
 
         {/* Team Preview */}
-        <section className="py-8 md:py-12 lg:py-20 bg-white">
+        <section className="py-8 md:py-12 lg:py-20 bg-white lg:hidden">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
