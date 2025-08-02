@@ -28,10 +28,10 @@ export default function EnhancedLoader({ onLoadComplete }: LoaderProps) {
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
 
-    // Progress simulation
+    // Progress simulation - faster loading
     const progressInterval = setInterval(() => {
       setProgress(prev => {
-        const increment = Math.random() * 15 + 5
+        const increment = Math.random() * 25 + 15 // Increased increment for faster loading
         const newProgress = Math.min(prev + increment, 100)
         
         // Update step based on progress
@@ -42,13 +42,13 @@ export default function EnhancedLoader({ onLoadComplete }: LoaderProps) {
           setTimeout(() => {
             setLoading(false)
             onLoadComplete?.()
-          }, 800)
+          }, 300) // Reduced delay from 800ms to 300ms
           clearInterval(progressInterval)
         }
         
         return newProgress
       })
-    }, 200)
+    }, 100) // Reduced interval from 200ms to 100ms for faster progression
 
     return () => {
       clearInterval(progressInterval)

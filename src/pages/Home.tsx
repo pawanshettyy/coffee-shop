@@ -132,19 +132,19 @@ export default function Home() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
+        staggerChildren: 0.1, // Reduced from 0.2
+        delayChildren: 0.05   // Reduced from 0.1
       }
     }
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 }, // Reduced from y: 30
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6
+        duration: 0.4 // Reduced from 0.6
       }
     }
   }
@@ -190,9 +190,9 @@ export default function Home() {
             
             {/* Left Content */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }} // Reduced from x: -50
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1 }} // Reduced duration and delay
               className="text-center lg:text-left"
             >
               <motion.div
@@ -282,9 +282,9 @@ export default function Home() {
 
             {/* Right Content - Hero Image */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 30 }} // Reduced from x: 50
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.2 }} // Reduced duration and delay
               className="relative"
             >
               <div className="relative">
@@ -370,6 +370,8 @@ export default function Home() {
                     <img 
                       src={product.image}
                       alt={product.name}
+                      loading="eager" // Eager loading for critical above-fold images
+                      decoding="async"
                       className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;

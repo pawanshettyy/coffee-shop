@@ -75,9 +75,9 @@ export default function Navbar() {
     <>
       {/* Main Navbar */}
       <motion.header
-        initial={{ y: -100 }}
+        initial={{ y: -50 }} // Reduced from -100
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.6, -0.05, 0.01, 0.99] }}
+        transition={{ duration: 0.4, ease: [0.6, -0.05, 0.01, 0.99] }} // Reduced from 0.6
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-accent/20'
@@ -183,7 +183,7 @@ export default function Navbar() {
                     animate={{ scale: 1 }}
                     className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium"
                   >
-                    3
+                    0
                   </motion.span>
                 </motion.button>
               </Link>
@@ -287,7 +287,7 @@ export default function Navbar() {
                           {link.name}
                           {link.path === '/cart' && (
                             <span className="ml-auto bg-accent text-cream text-xs rounded-full px-2 py-1">
-                              3
+                              0
                             </span>
                           )}
                           {isActive(link.path) && (

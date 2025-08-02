@@ -20,9 +20,6 @@ import { Link } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 
 // Image imports
-import espressoImage from '/images/menu-espresso.jpg'
-import macchiatoImage from '/images/menu-caramel-macchiato.jpg'
-import croissantImage from '/images/menu-chocolate-croissant.jpg'
 import vanillaLatteImage from '/images/menu-iced-vanilla-latte.jpg'
 import blueberryMuffinImage from '/images/menu-blueberry-muffin.jpg'
 import coldBrewImage from '/images/menu-cold-brew.jpg'
@@ -48,44 +45,6 @@ interface CouponCode {
   minAmount: number
   description: string
 }
-
-// Mock data
-const mockCartItems: CartItem[] = [
-  {
-    id: 1,
-    productId: 1,
-    name: 'Classic Espresso',
-    price: 299,
-    originalPrice: 349,
-    quantity: 2,
-    size: 'Double',
-    image: espressoImage,
-    category: 'hot-coffee',
-    maxQuantity: 10
-  },
-  {
-    id: 2,
-    productId: 2,
-    name: 'Caramel Macchiato',
-    price: 449,
-    quantity: 1,
-    size: 'Large',
-    image: macchiatoImage,
-    category: 'hot-coffee',
-    maxQuantity: 5
-  },
-  {
-    id: 3,
-    productId: 5,
-    name: 'Chocolate Croissant',
-    price: 299,
-    quantity: 3,
-    size: 'Regular',
-    image: croissantImage,
-    category: 'pastries',
-    maxQuantity: 8
-  }
-]
 
 const availableCoupons: CouponCode[] = [
   {
@@ -136,7 +95,7 @@ const suggestedItems = [
 ]
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems)
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [couponCode, setCouponCode] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState<CouponCode | null>(null)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
