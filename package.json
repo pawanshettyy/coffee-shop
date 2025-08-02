@@ -1,16 +1,21 @@
 {
-  "name": "coffeecraft",
+  "name": "coffeecraft-hackathon",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "CoffeeCraft - Premium coffee shop experience with interactive menu and elegant design",
+  "description": "CoffeeCraft - Hackathon Submission: Premium coffee shop experience with interactive menu, advanced animations, and mobile-first design",
   "keywords": [
+    "hackathon",
     "coffee",
     "restaurant",
-    "menu",
+    "interactive",
     "react",
+    "typescript",
     "vite",
-    "typescript"
+    "framer-motion",
+    "tailwind",
+    "performance-optimized",
+    "mobile-first"
   ],
   "author": "Pawan Shetty",
   "scripts": {

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Coffee, Star, Users, Award, ArrowRight, Heart, Clock, MapPin, Play } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import PageWrapper from '../components/PageWrapper'
 import HoverImage from '../components/HoverImage'
 import ImageGrid from '../components/ImageGrid'
 import Marquee from '../components/Marquee'
@@ -151,13 +150,18 @@ export default function Home() {
   }
 
   return (
-    <PageWrapper>
-      <div className="min-h-screen bg-gradient-to-br from-cream via-white to-cream overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      className="min-h-screen bg-gradient-to-br from-cream via-white to-cream overflow-hidden"
+    >
         
         {/* Hero Section */}
         <motion.section
           style={{ y: heroY, opacity: heroOpacity }}
-          className="min-h-screen flex items-center justify-center relative px-3 sm:px-4 md:px-6"
+          className="min-h-screen flex items-center justify-center relative px-3 sm:px-4 md:px-6 py-12 sm:py-16"
         >
           {/* Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
@@ -286,7 +290,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 30 }} // Reduced from x: 50
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }} // Reduced duration and delay
-              className="relative"
+              className="relative hidden lg:block"
             >
               <div className="relative">
                 <HoverImage
@@ -324,7 +328,7 @@ export default function Home() {
         </motion.section>
 
         {/* Infinite Marquee */}
-        <section className="mb-8 sm:mb-12 md:mb-16">
+        <section>
           <Marquee />
         </section>
 
@@ -692,7 +696,6 @@ export default function Home() {
             </motion.div>
           </motion.div>
         )}
-      </div>
-    </PageWrapper>
+    </motion.div>
   )
 }
