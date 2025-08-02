@@ -4,30 +4,66 @@ interface LazyImageProps {
   src: string
   alt: string
   className?: string
-  placeholder?: string
   loading?: 'lazy' | 'eager'
+  priority?: boolean
+  fallback?: string
+  onLoad?: () => void
+  onError?: () => void
 }
 
 export default function LazyImage({ 
   src, 
   alt, 
   className = '', 
-  placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGM0YzIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5OTk5IiBmb250LXNpemU9IjE0cHgiPkxvYWRpbmc8L3RleHQ+Cjwvc3ZnPg==',
-  loading = 'lazy'
+  loading = 'lazy',
+  priority = false,
+  fallback,
+  onLoad,
+  onError
 }: LazyImageProps) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
+  const [isInView, setIsInView] = useState(priority || loading === 'eager')
   const imgRef = useRef<HTMLImageElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!priority && loading === 'lazy' && containerRef.current) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsInView(true)
+            observer.disconnect()
+          }
+        },
+        {
+          rootMargin: '50px',
+          threshold: 0.1
+        }
+      )
+      
+      observer.observe(containerRef.current)
+      
+      return () => observer.disconnect()
+    }
+  }, [priority, loading])
 
   useEffect(() => {
     const img = imgRef.current
-    if (!img) return
+    if (!img || !isInView) return
 
-    const handleLoad = () => setIsLoaded(true)
-    const handleError = () => setHasError(true)
+    const handleLoad = () => {
+      setIsLoaded(true)
+      onLoad?.()
+    }
+    
+    const handleError = () => {
+      setHasError(true)
+      onError?.()
+    }
 
     // If image is already cached, it will load immediately
-    if (img.complete) {
+    if (img.complete && img.naturalWidth > 0) {
       setIsLoaded(true)
     } else {
       img.addEventListener('load', handleLoad)
@@ -38,9 +74,11 @@ export default function LazyImage({
       img.removeEventListener('load', handleLoad)
       img.removeEventListener('error', handleError)
     }
-  }, [src])
+  }, [src, isInView, onLoad, onError])
 
-  if (hasError) {
+  const imageSrc = hasError && fallback ? fallback : src
+
+  if (hasError && !fallback) {
     return (
       <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
         <span className="text-gray-500 text-sm">Failed to load image</span>
@@ -49,28 +87,33 @@ export default function LazyImage({
   }
 
   return (
-    <div className="relative overflow-hidden">
+    <div ref={containerRef} className="relative overflow-hidden">
+      {/* Skeleton/Placeholder */}
       {!isLoaded && (
+        <div className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse ${className}`}>
+          <div className="flex items-center justify-center h-full">
+            <div className="w-8 h-8 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" />
+          </div>
+        </div>
+      )}
+
+      {/* Actual Image */}
+      {isInView && (
         <img
-          src={placeholder}
-          alt=""
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${className}`}
+          ref={imgRef}
+          src={imageSrc}
+          alt={alt}
+          loading={loading}
+          decoding="async"
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          } ${className}`}
+          style={{ 
+            minHeight: isLoaded ? 'auto' : '200px',
+            backgroundColor: '#f3f3f3'
+          }}
         />
       )}
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        loading={loading}
-        decoding="async"
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        } ${className}`}
-        style={{ 
-          minHeight: isLoaded ? 'auto' : '200px',
-          backgroundColor: '#f3f3f3'
-        }}
-      />
     </div>
   )
 }

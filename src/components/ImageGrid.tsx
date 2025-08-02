@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import LazyImage from './LazyImage'
 import CustomCursor from './CustomCursor'
 
 const images = [
@@ -19,12 +20,11 @@ export default function ImageGrid() {
           whileHover={{ scale: 1.05 }}
           className="overflow-hidden rounded-lg"
         >
-          <motion.img
+          <LazyImage
             src={src}
             alt={`Grid ${i}`}
-            className="w-full h-full object-cover"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.5 }}
+            className="w-full h-full"
+            loading="lazy"
           />
         </motion.div>
       ))}

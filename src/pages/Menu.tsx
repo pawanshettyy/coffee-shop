@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Coffee, Filter, Star, Heart, ShoppingCart, Plus, Minus, Search, Clock, Thermometer } from 'lucide-react'
 import PageWrapper from '../components/PageWrapper'
+import LazyImage from '../components/LazyImage'
 import { useCart } from '../hooks/useCart'
 
 // Type definitions
@@ -439,14 +440,12 @@ export default function Menu() {
                 >
                   {/* Image */}
                   <div className="relative overflow-hidden">
-                    <motion.img
+                    <LazyImage
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `https://images.unsplash.com/photo-${1500000000000 + item.id}?w=400&h=300&fit=crop`;
-                      }}
+                      className="w-full h-48 transition-transform duration-500 group-hover:scale-110"
+                      fallback={`https://images.unsplash.com/photo-${1500000000000 + item.id}?w=400&h=300&fit=crop`}
+                      loading="lazy"
                     />
                     
                     {/* Badges */}
@@ -632,14 +631,12 @@ function ItemDetailModal({ item, onAddToCart, onClose }: {
       {/* Item Details */}
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-1/2">
-          <img
+          <LazyImage
             src={item.image}
             alt={item.name}
             className="w-full rounded-2xl shadow-lg"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = `https://images.unsplash.com/photo-${1500000000000 + item.id}?w=500&h=400&fit=crop`;
-            }}
+            fallback={`https://images.unsplash.com/photo-${1500000000000 + item.id}?w=500&h=400&fit=crop`}
+            priority={true}
           />
         </div>
         

@@ -5,7 +5,7 @@ import { CartProvider } from './context/CartContext'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import EnhancedLoader from './components/EnhancedLoader'
+import Preloader from './components/Preloader'
 
 import Home from './pages/Home'
 import Menu from './pages/Menu'
@@ -22,20 +22,22 @@ function AppContent() {
   useEffect(() => {
     const criticalImages = [
       '/images/hero-coffee-main.jpg',
-      '/images/hero-coffee-pour.jpg',
       '/images/menu-espresso.jpg',
       '/images/menu-caramel-macchiato.jpg',
-      '/images/menu-cold-brew.jpg',
-      '/images/menu-cappuccino.jpg',
-      '/images/team-maya.jpg',
-      '/images/team-liam.jpg',
-      '/images/team-ava.jpg',
-      '/images/team-noah.jpg'
+      '/images/menu-cold-brew.jpg'
     ]
 
-    criticalImages.forEach(src => {
-      const img = new Image()
-      img.src = src
+    const preloadImages = criticalImages.map(src => {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = resolve
+        img.onerror = reject
+        img.src = src
+      })
+    })
+
+    Promise.allSettled(preloadImages).then(() => {
+      // Critical images preloaded
     })
   }, [])
 
@@ -45,7 +47,7 @@ function AppContent() {
 
   return (
     <>
-      <EnhancedLoader onLoadComplete={handleLoadComplete} />
+      <Preloader onComplete={handleLoadComplete} />
       {isLoaded && (
         <div className="bg-cream min-h-screen text-coffee font-sans">
           <Navbar />

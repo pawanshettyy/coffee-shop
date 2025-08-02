@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import LazyImage from './LazyImage'
 
 const team = [
   { name: 'Ava', image: '/images/team-ava.jpg' },
@@ -29,16 +30,21 @@ export default function TeamSection() {
       <div className="relative min-h-[200px] w-full max-w-[300px] hidden md:block">
         <AnimatePresence>
           {hovered !== null && (
-            <motion.img
+            <motion.div
               key={hovered}
-              src={team[hovered].image}
-              alt={team[hovered].name}
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               transition={{ duration: 0.4 }}
-              className="absolute rounded-lg shadow-lg w-full h-auto object-cover"
-            />
+              className="absolute rounded-lg shadow-lg w-full h-auto"
+            >
+              <LazyImage
+                src={team[hovered].image}
+                alt={team[hovered].name}
+                className="rounded-lg w-full h-auto"
+                priority={true}
+              />
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
