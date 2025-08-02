@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Coffee, ShoppingBag, User } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import { useCart } from '../hooks/useCart'
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [showBackendModal, setShowBackendModal] = useState(false)
   const location = useLocation()
+  const { cartCount } = useCart()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -180,10 +182,10 @@ export default function Navbar() {
                   <ShoppingBag size={20} />
                   <motion.span
                     initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
+                    animate={{ scale: cartCount > 0 ? 1 : 0 }}
                     className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium"
                   >
-                    0
+                    {cartCount}
                   </motion.span>
                 </motion.button>
               </Link>
@@ -285,9 +287,9 @@ export default function Navbar() {
                           onClick={() => setIsOpen(false)}
                         >
                           {link.name}
-                          {link.path === '/cart' && (
+                          {link.path === '/cart' && cartCount > 0 && (
                             <span className="ml-auto bg-accent text-cream text-xs rounded-full px-2 py-1">
-                              0
+                              {cartCount}
                             </span>
                           )}
                           {isActive(link.path) && (
@@ -344,9 +346,11 @@ export default function Navbar() {
                       >
                         <ShoppingBag size={18} className="mr-2" />
                         Cart
-                        <span className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                          3
-                        </span>
+                        {cartCount > 0 && (
+                          <span className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {cartCount}
+                          </span>
+                        )}
                       </motion.button>
                     </Link>
                   </div>

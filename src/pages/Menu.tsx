@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { Coffee, Filter, Star, Heart, ShoppingCart, Plus, Minus, Search, Clock, Thermometer } from 'lucide-react'
 import PageWrapper from '../components/PageWrapper'
+import { useCart } from '../hooks/useCart'
 
 // Type definitions
 interface Size {
@@ -207,23 +209,16 @@ const menuItems: MenuItem[] = [
   }
 ]
 
-interface CartItem {
-  id: number
-  name: string
-  price: number
-  quantity: number
-  size: string
-  image: string
-}
-
 export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedItem, setSelectedItem] = useState<number | null>(null)
   const [favorites, setFavorites] = useState<number[]>([2, 5])
-  const [cart, setCart] = useState<CartItem[]>([])
   const [sortBy, setSortBy] = useState<'popular' | 'price-low' | 'price-high' | 'rating'>('popular')
   const [showFilters, setShowFilters] = useState(false)
+  
+  const { addToCart: addToCartContext, cartItems, subtotal } = useCart()
+  const navigate = useNavigate()
 
   // Filter and sort menu items
   const filteredItems = menuItems
@@ -255,18 +250,20 @@ export default function Menu() {
     )
   }
 
-  const addToCart = (item: MenuItem, selectedSize: string, quantity: number = 1) => {
+  const handleAddToCart = (item: MenuItem, selectedSize: string, quantity: number = 1) => {
     const sizeInfo = item.sizes.find((s: Size) => s.name === selectedSize)
-    const cartItem: CartItem = {
-      id: Date.now(), // Unique cart item ID
-      name: `${item.name} (${selectedSize})`,
+    const cartItem = {
+      productId: item.id,
+      name: `${item.name}`,
       price: sizeInfo?.price || item.price,
       quantity,
       size: selectedSize,
-      image: item.image
+      image: item.image,
+      category: item.category,
+      maxQuantity: 10
     }
     
-    setCart(prev => [...prev, cartItem])
+    addToCartContext(cartItem)
     setSelectedItem(null)
   }
 
@@ -527,7 +524,7 @@ export default function Menu() {
                       onClick={(e) => {
                         e.stopPropagation()
                         const defaultSize = item.sizes[0]?.name || 'Regular'
-                        addToCart(item, defaultSize)
+                        handleAddToCart(item, defaultSize)
                       }}
                       className="w-full bg-accent hover:bg-accent/90 text-white py-2 rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
                     >
@@ -576,7 +573,7 @@ export default function Menu() {
                   const item = menuItems.find(m => m.id === selectedItem);
                   if (!item) return null;
                   
-                  return <ItemDetailModal item={item} onAddToCart={addToCart} onClose={() => setSelectedItem(null)} />;
+                  return <ItemDetailModal item={item} onAddToCart={handleAddToCart} onClose={() => setSelectedItem(null)} />;
                 })()}
               </motion.div>
             </motion.div>
@@ -584,7 +581,7 @@ export default function Menu() {
         </AnimatePresence>
 
         {/* Cart Summary */}
-        {cart.length > 0 && (
+        {cartItems.length > 0 && (
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -592,11 +589,14 @@ export default function Menu() {
           >
             <div className="flex items-center space-x-3">
               <ShoppingCart size={20} />
-              <span className="font-medium">{cart.length} items</span>
+              <span className="font-medium">{cartItems.length} items</span>
               <span className="font-bold">
-                ₹{cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(0)}
+                ₹{subtotal.toFixed(0)}
               </span>
-              <button className="bg-accent hover:bg-accent/90 px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+              <button 
+                onClick={() => navigate('/cart')}
+                className="bg-accent hover:bg-accent/90 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+              >
                 View Cart
               </button>
             </div>

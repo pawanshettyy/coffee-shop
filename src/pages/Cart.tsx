@@ -18,33 +18,13 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
+import { useCart } from '../hooks/useCart'
+import { type CouponCode } from '../context/CartContext'
 
 // Image imports
 import vanillaLatteImage from '/images/menu-iced-vanilla-latte.jpg'
 import blueberryMuffinImage from '/images/menu-blueberry-muffin.jpg'
 import coldBrewImage from '/images/menu-cold-brew.jpg'
-
-// Types
-interface CartItem {
-  id: number
-  productId: number
-  name: string
-  price: number
-  originalPrice?: number
-  quantity: number
-  size: string
-  image: string
-  category: string
-  maxQuantity: number
-}
-
-interface CouponCode {
-  code: string
-  discount: number
-  type: 'percentage' | 'fixed'
-  minAmount: number
-  description: string
-}
 
 const availableCoupons: CouponCode[] = [
   {
@@ -95,20 +75,19 @@ const suggestedItems = [
 ]
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [couponCode, setCouponCode] = useState('')
-  const [appliedCoupon, setAppliedCoupon] = useState<CouponCode | null>(null)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [showBackendModal, setShowBackendModal] = useState(false)
-
-  // Calculate totals
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  const savings = cartItems.reduce((sum, item) => {
-    if (item.originalPrice) {
-      return sum + ((item.originalPrice - item.price) * item.quantity)
-    }
-    return sum
-  }, 0)
+  
+  const { 
+    cartItems, 
+    removeFromCart, 
+    updateQuantity, 
+    appliedCoupon, 
+    setAppliedCoupon,
+    subtotal,
+    savings
+  } = useCart()
   
   const couponDiscount = appliedCoupon 
     ? appliedCoupon.type === 'percentage' 
@@ -120,34 +99,13 @@ export default function Cart() {
   const taxes = (subtotal - couponDiscount) * 0.05 // 5% tax
   const total = subtotal - couponDiscount + taxes + deliveryFee
 
-  // Update quantity
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity === 0) {
-      removeItem(id)
-      return
-    }
-    
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === id 
-          ? { ...item, quantity: Math.min(newQuantity, item.maxQuantity) }
-          : item
-      )
-    )
-  }
-
-  // Remove item
-  const removeItem = (id: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== id))
-  }
-
   // Move to saved items (placeholder functionality)
   const moveToSaved = (id: number) => {
     const item = cartItems.find(item => item.id === id)
     if (item) {
       // In a real app, this would save to a wishlist/saved items
       // For now, we'll just remove the item
-      removeItem(id)
+      removeFromCart(id)
     }
   }
 
@@ -368,7 +326,7 @@ export default function Cart() {
                                   <span>Save for later</span>
                                 </button>
                                 <button
-                                  onClick={() => removeItem(item.id)}
+                                  onClick={() => removeFromCart(item.id)}
                                   className="flex items-center space-x-1 text-sm text-red-500 hover:text-red-600 transition-colors"
                                 >
                                   <Trash2 size={14} />
@@ -396,7 +354,7 @@ export default function Cart() {
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                disabled={item.quantity >= item.maxQuantity}
+                                disabled={item.quantity >= (item.maxQuantity || 10)}
                                 className="w-8 h-8 rounded-full bg-accent/10 hover:bg-accent/20 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 <Plus size={14} className="text-accent" />

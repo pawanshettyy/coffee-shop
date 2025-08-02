@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { CartProvider } from './context/CartContext'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -16,6 +17,27 @@ import NotFound from './pages/NotFound'
 function AppContent() {
   const [isLoaded, setIsLoaded] = useState(false)
   const location = useLocation()
+
+  // Preload critical images for faster loading
+  useEffect(() => {
+    const criticalImages = [
+      '/images/hero-coffee-main.jpg',
+      '/images/hero-coffee-pour.jpg',
+      '/images/menu-espresso.jpg',
+      '/images/menu-caramel-macchiato.jpg',
+      '/images/menu-cold-brew.jpg',
+      '/images/menu-cappuccino.jpg',
+      '/images/team-maya.jpg',
+      '/images/team-liam.jpg',
+      '/images/team-ava.jpg',
+      '/images/team-noah.jpg'
+    ]
+
+    criticalImages.forEach(src => {
+      const img = new Image()
+      img.src = src
+    })
+  }, [])
 
   const handleLoadComplete = () => {
     setIsLoaded(true)
@@ -45,5 +67,9 @@ function AppContent() {
 }
 
 export default function App() {
-  return <AppContent />
+  return (
+    <CartProvider>
+      <AppContent />
+    </CartProvider>
+  )
 }
