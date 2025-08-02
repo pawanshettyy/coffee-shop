@@ -60,10 +60,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "src/api/**/*.ts": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
