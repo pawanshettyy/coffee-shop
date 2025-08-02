@@ -7,11 +7,13 @@ const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Menu', path: '/menu' },
   { name: 'Team', path: '/team' },
+  { name: 'Cart', path: '/cart' },
 ]
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [showBackendModal, setShowBackendModal] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
@@ -29,6 +31,45 @@ export default function Navbar() {
   }, [location])
 
   const isActive = (path: string) => location.pathname === path
+
+  const BackendModal = () => (
+    <AnimatePresence>
+      {showBackendModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-coffee/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowBackendModal(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Coffee className="text-accent" size={32} />
+              </div>
+              <h3 className="text-2xl font-bold text-coffee mb-2">Coming Soon!</h3>
+              <p className="text-coffee/70">
+                User authentication and profile management will be available once 
+                backend integration is complete.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowBackendModal(false)}
+              className="w-full bg-accent hover:bg-accent/90 text-white py-3 rounded-xl font-medium transition-colors"
+            >
+              Got it!
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 
   return (
     <>
@@ -76,7 +117,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-              {navLinks.map((link, index) => (
+              {navLinks.slice(0, 3).map((link, index) => (
                 <motion.div
                   key={link.path}
                   initial={{ opacity: 0, y: -20 }}
@@ -114,6 +155,7 @@ export default function Navbar() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setShowBackendModal(true)}
                 className={`p-2 rounded-full transition-colors duration-300 ${
                   scrolled
                     ? 'text-coffee hover:bg-cream/20'
@@ -124,29 +166,32 @@ export default function Navbar() {
                 <User size={20} />
               </motion.button>
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-2 rounded-full transition-colors duration-300 relative ${
-                  scrolled
-                    ? 'text-coffee hover:bg-cream/20'
-                    : 'text-cream hover:bg-cream/10'
-                }`}
-                aria-label="Shopping Cart"
-              >
-                <ShoppingBag size={20} />
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium"
+              <Link to="/cart">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`p-2 rounded-full transition-colors duration-300 relative ${
+                    scrolled
+                      ? 'text-coffee hover:bg-cream/20'
+                      : 'text-cream hover:bg-cream/10'
+                  } ${isActive('/cart') ? 'bg-accent/20' : ''}`}
+                  aria-label="Shopping Cart"
                 >
-                  3
-                </motion.span>
-              </motion.button>
+                  <ShoppingBag size={20} />
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium"
+                  >
+                    3
+                  </motion.span>
+                </motion.button>
+              </Link>
 
               <motion.button
                 whileHover={{ scale: 1.05, y: -1 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setShowBackendModal(true)}
                 className="bg-accent hover:bg-accent/90 text-cream px-4 lg:px-6 py-2 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Order Now
@@ -240,6 +285,11 @@ export default function Navbar() {
                           onClick={() => setIsOpen(false)}
                         >
                           {link.name}
+                          {link.path === '/cart' && (
+                            <span className="ml-auto bg-accent text-cream text-xs rounded-full px-2 py-1">
+                              3
+                            </span>
+                          )}
                           {isActive(link.path) && (
                             <motion.div
                               className="ml-auto w-2 h-2 bg-accent rounded-full"
@@ -259,6 +309,10 @@ export default function Navbar() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setShowBackendModal(true)
+                      setIsOpen(false)
+                    }}
                     className="w-full bg-accent hover:bg-accent/90 text-cream py-3 rounded-xl font-medium transition-colors duration-300 shadow-lg"
                   >
                     Order Now ☕
@@ -268,23 +322,33 @@ export default function Navbar() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setShowBackendModal(true)
+                        setIsOpen(false)
+                      }}
                       className="flex-1 flex items-center justify-center py-3 border border-accent/30 rounded-xl text-coffee hover:bg-accent/5 transition-colors"
                     >
                       <User size={18} className="mr-2" />
                       Profile
                     </motion.button>
                     
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 flex items-center justify-center py-3 border border-accent/30 rounded-xl text-coffee hover:bg-accent/5 transition-colors relative"
+                    <Link
+                      to="/cart"
+                      onClick={() => setIsOpen(false)}
+                      className="flex-1"
                     >
-                      <ShoppingBag size={18} className="mr-2" />
-                      Cart
-                      <span className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        3
-                      </span>
-                    </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full flex items-center justify-center py-3 border border-accent/30 rounded-xl text-coffee hover:bg-accent/5 transition-colors relative"
+                      >
+                        <ShoppingBag size={18} className="mr-2" />
+                        Cart
+                        <span className="absolute -top-1 -right-1 bg-accent text-cream text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                          3
+                        </span>
+                      </motion.button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -295,6 +359,8 @@ export default function Navbar() {
 
       {/* Spacer to prevent content from hiding behind fixed navbar */}
       <div className="h-16 lg:h-20" />
+      
+      <BackendModal />
     </>
   )
 }

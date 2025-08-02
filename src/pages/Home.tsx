@@ -327,6 +327,9 @@ export default function Home() {
           <Marquee />
         </section>
 
+        {/* Scroll-based Text Animation - Enhanced */}
+        <ScrollText />
+
         {/* Featured Products */}
         <motion.section
           style={{ y: featuredY }}
@@ -469,9 +472,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Scroll-based Text Animation */}
-        <ScrollText />
 
         {/* Image Grid Section */}
         <section className="py-20">
