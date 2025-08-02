@@ -13,7 +13,7 @@ const images = [
 
 export default function ImageGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-6 cursor-none relative">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 p-3 sm:p-4 md:p-6 cursor-none relative">
       {images.map((src, i) => (
         <motion.div
           key={i}

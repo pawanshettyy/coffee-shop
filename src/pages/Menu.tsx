@@ -340,7 +340,7 @@ export default function Menu() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center py-12 lg:py-20"
+          className="text-center py-8 md:py-12 lg:py-20"
         >
           <motion.div
             initial={{ scale: 0.9 }}
@@ -370,7 +370,7 @@ export default function Menu() {
 
           {/* Search and Filters */}
           <div className="max-w-2xl mx-auto px-4">
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4 md:mb-6">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-coffee/40" size={20} />
                 <input
@@ -399,7 +399,7 @@ export default function Menu() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="bg-white rounded-2xl p-6 shadow-lg mb-8 overflow-hidden"
+                  className="bg-white rounded-2xl p-4 md:p-6 shadow-lg mb-6 md:mb-8 overflow-hidden"
                 >
                   <h3 className="text-lg font-semibold text-coffee mb-4">Sort by:</h3>
                   <div className="flex flex-wrap gap-3">
@@ -433,16 +433,16 @@ export default function Menu() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="py-8"
+          className="py-4 md:py-6 lg:py-8"
         >
-          <div className="flex flex-wrap justify-center gap-4 px-4">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4 px-4">
             {categories.map((category) => (
               <motion.button
                 key={category.id}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveCategory(category.id)}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                className={`flex items-center space-x-2 px-4 md:px-6 py-2 md:py-3 rounded-full font-medium transition-all duration-300 ${
                   activeCategory === category.id
                     ? 'bg-coffee text-cream shadow-lg'
                     : 'bg-white text-coffee hover:bg-accent/10 hover:text-accent shadow-md'
@@ -466,9 +466,9 @@ export default function Menu() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="py-12"
+          className="py-6 md:py-8 lg:py-12"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto px-4 auto-rows-fr">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto px-4 auto-rows-fr">
             <AnimatePresence>
               {filteredItems.map((item, index) => (
                 <motion.div

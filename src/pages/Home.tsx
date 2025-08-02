@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Coffee, Star, Users, Award, ArrowRight, Play, Heart, Clock, MapPin } from 'lucide-react'
+import { Coffee, Star, Users, Award, ArrowRight, Heart, Clock, MapPin, Play } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import HoverImage from '../components/HoverImage'
@@ -157,7 +157,7 @@ export default function Home() {
         {/* Hero Section */}
         <motion.section
           style={{ y: heroY, opacity: heroOpacity }}
-          className="min-h-screen flex items-center justify-center relative px-4"
+          className="min-h-screen flex items-center justify-center relative px-3 sm:px-4 md:px-6"
         >
           {/* Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
@@ -187,7 +187,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center relative z-10 px-3 sm:px-0">
             
             {/* Left Content */}
             <motion.div
@@ -206,7 +206,7 @@ export default function Home() {
                 <span className="text-accent font-medium">Welcome to CoffeeCraft</span>
               </motion.div>
               
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-coffee mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-coffee mb-4 sm:mb-6 leading-tight">
                 Where Every{' '}
                 <motion.span
                   className="text-accent relative"
@@ -225,22 +225,22 @@ export default function Home() {
                 {' '}Tells a Story
               </h1>
               
-              <p className="text-lg lg:text-xl text-coffee/70 mb-8 leading-relaxed max-w-2xl">
+              <p className="text-base sm:text-lg lg:text-xl text-coffee/70 mb-6 sm:mb-8 leading-relaxed max-w-2xl px-2 sm:px-0">
                 Experience the perfect blend of tradition and innovation. Our passionate baristas 
                 craft each cup with premium beans sourced from the world's finest plantations.
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-12 px-2 sm:px-0">
                 <Link to="/menu">
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="group bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
+                    className="group bg-accent hover:bg-accent/90 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"
                   >
                     <span>Explore Menu</span>
                     <ArrowRight 
-                      size={20} 
+                      size={18} 
                       className="group-hover:translate-x-1 transition-transform" 
                     />
                   </motion.button>
@@ -250,9 +250,9 @@ export default function Home() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setIsVideoPlaying(true)}
-                  className="group border-2 border-coffee text-coffee hover:bg-coffee hover:text-cream px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center space-x-2"
+                  className="group border-2 border-coffee text-coffee hover:bg-coffee hover:text-cream px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"
                 >
-                  <Play size={20} className="group-hover:scale-110 transition-transform" />
+                  <Play size={18} className="group-hover:scale-110 transition-transform" />
                   <span>Watch Our Story</span>
                 </motion.button>
               </div>
@@ -262,7 +262,7 @@ export default function Home() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-2 lg:grid-cols-4 gap-6"
+                className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 px-2 sm:px-0"
               >
                 {heroStats.map((stat) => (
                   <motion.div
@@ -271,11 +271,11 @@ export default function Home() {
                     whileHover={{ scale: 1.05, y: -5 }}
                     className="text-center group"
                   >
-                    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 ${stat.color} bg-white shadow-lg group-hover:shadow-xl transition-shadow`}>
-                      <stat.icon size={24} />
+                    <div className={`inline-flex items-center justify-center w-10 sm:w-12 h-10 sm:h-12 rounded-xl mb-2 sm:mb-3 ${stat.color} bg-white shadow-lg group-hover:shadow-xl transition-shadow`}>
+                      <stat.icon size={20} className="sm:w-6 sm:h-6" />
                     </div>
-                    <div className="text-2xl font-bold text-coffee mb-1">{stat.value}</div>
-                    <div className="text-coffee/60 text-sm font-medium">{stat.label}</div>
+                    <div className="text-lg sm:text-2xl font-bold text-coffee mb-1">{stat.value}</div>
+                    <div className="text-coffee/60 text-xs sm:text-sm font-medium">{stat.label}</div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -324,7 +324,7 @@ export default function Home() {
         </motion.section>
 
         {/* Infinite Marquee */}
-        <section className="mb-16">
+        <section className="mb-8 sm:mb-12 md:mb-16">
           <Marquee />
         </section>
 
@@ -334,29 +334,29 @@ export default function Home() {
         {/* Featured Products */}
         <motion.section
           style={{ y: featuredY }}
-          className="py-20 relative"
+          className="py-8 md:py-12 lg:py-20 relative"
         >
-          <div className="max-w-7xl mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-12 md:mb-16"
             >
-              <div className="inline-flex items-center space-x-2 bg-accent/10 rounded-full px-6 py-2 mb-6">
-                <Coffee className="text-accent" size={20} />
-                <span className="text-accent font-medium">Featured Products</span>
+              <div className="inline-flex items-center space-x-2 bg-accent/10 rounded-full px-4 sm:px-6 py-2 mb-4 sm:mb-6">
+                <Coffee className="text-accent" size={18} />
+                <span className="text-accent font-medium text-sm sm:text-base">Featured Products</span>
               </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-coffee mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-coffee mb-4 sm:mb-6">
                 Our Bestsellers
               </h2>
-              <p className="text-lg text-coffee/70 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-coffee/70 max-w-2xl mx-auto px-4 sm:px-0">
                 Discover our most loved coffee creations, crafted to perfection
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {featuredProducts.map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -426,7 +426,7 @@ export default function Home() {
         </motion.section>
 
         {/* Process Section */}
-        <section className="py-20 bg-gradient-to-r from-coffee to-accent text-white relative overflow-hidden">
+        <section className="py-8 md:py-12 lg:py-20 bg-gradient-to-r from-coffee to-accent text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/20" />
           <div className="max-w-7xl mx-auto px-4 relative z-10">
             <motion.div
@@ -434,7 +434,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 md:mb-12 lg:mb-16"
             >
               <h2 className="text-4xl lg:text-5xl font-bold mb-6">Our Coffee Journey</h2>
               <p className="text-lg opacity-90 max-w-2xl mx-auto">
@@ -442,7 +442,7 @@ export default function Home() {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {processSteps.map((step, index) => (
                 <motion.div
                   key={step.id}
@@ -477,17 +477,17 @@ export default function Home() {
         </section>
 
         {/* Image Grid Section */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4">
+        <section className="py-8 md:py-12 lg:py-20">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-12 md:mb-16"
             >
-              <h2 className="text-4xl lg:text-5xl font-bold text-coffee mb-6">Our Gallery</h2>
-              <p className="text-lg text-coffee/70 max-w-2xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-coffee mb-4 sm:mb-6">Our Gallery</h2>
+              <p className="text-base sm:text-lg text-coffee/70 max-w-2xl mx-auto px-4 sm:px-0">
                 Take a glimpse into our world of coffee craftsmanship and cozy ambiance
               </p>
             </motion.div>
@@ -496,17 +496,17 @@ export default function Home() {
         </section>
 
         {/* 3D Mystery Element */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4">
+        <section className="py-8 md:py-12 lg:py-20">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-12 md:mb-16"
             >
-              <h2 className="text-4xl lg:text-5xl font-bold text-coffee mb-6">Interactive Experience</h2>
-              <p className="text-lg text-coffee/70 max-w-2xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-coffee mb-4 sm:mb-6">Interactive Experience</h2>
+              <p className="text-base sm:text-lg text-coffee/70 max-w-2xl mx-auto px-4 sm:px-0">
                 Explore our 3D coffee experience - drag to rotate and discover the art of coffee making
               </p>
             </motion.div>
@@ -515,17 +515,17 @@ export default function Home() {
         </section>
 
         {/* Team Preview */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4">
+        <section className="py-8 md:py-12 lg:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-12 md:mb-16"
             >
-              <h2 className="text-4xl lg:text-5xl font-bold text-coffee mb-6">Meet Our Baristas</h2>
-              <p className="text-lg text-coffee/70 max-w-2xl mx-auto mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-coffee mb-4 sm:mb-6">Meet Our Baristas</h2>
+              <p className="text-base sm:text-lg text-coffee/70 max-w-2xl mx-auto mb-6 sm:mb-8 px-4 sm:px-0">
                 The passionate people behind every perfect cup
               </p>
             </motion.div>
@@ -546,17 +546,17 @@ export default function Home() {
         </section>
 
         {/* Testimonials */}
-        <section className="py-20 bg-gradient-to-br from-cream to-white">
-          <div className="max-w-4xl mx-auto px-4">
+        <section className="py-8 md:py-12 lg:py-20 bg-gradient-to-br from-cream to-white">
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-12 md:mb-16"
             >
-              <h2 className="text-4xl lg:text-5xl font-bold text-coffee mb-6">What Our Customers Say</h2>
-              <p className="text-lg text-coffee/70">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-coffee mb-4 sm:mb-6">What Our Customers Say</h2>
+              <p className="text-base sm:text-lg text-coffee/70 px-4 sm:px-0">
                 Don't just take our word for it - hear from our amazing community
               </p>
             </motion.div>
@@ -618,7 +618,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-coffee to-accent text-white relative overflow-hidden">
+        <section className="py-8 md:py-12 lg:py-20 bg-gradient-to-r from-coffee to-accent text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/20" />
           <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
             <motion.div

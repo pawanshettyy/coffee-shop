@@ -24,22 +24,22 @@ export default function ScrollText() {
   }, [])
 
   return (
-    <div className="flex justify-center items-center min-h-[60vh] bg-gradient-to-br from-cream via-white to-cream sticky top-0 z-10 overflow-hidden">
+    <div className="flex justify-center items-center min-h-[50vh] sm:min-h-[60vh] bg-gradient-to-br from-cream via-white to-cream sticky top-0 z-10 overflow-hidden">
       <motion.div
         style={{ 
           transform: `scale(${scale})`, 
           opacity,
           transition: 'all 0.1s ease-out' 
         }}
-        className="text-center px-4"
+        className="text-center px-3 sm:px-4"
       >
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-coffee leading-tight mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-coffee leading-tight mb-3 sm:mb-4">
           Brew
           <span className="block text-accent">Something</span>
           <span className="block text-coffee/80">Extraordinary</span>
         </h1>
         <motion.p 
-          className="text-lg md:text-xl text-coffee/60 font-medium"
+          className="text-base sm:text-lg md:text-xl text-coffee/60 font-medium"
           style={{ opacity: opacity * 0.8 }}
         >
           Every scroll brings you closer to perfection ☕

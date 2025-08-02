@@ -23,7 +23,7 @@ export default function Loader() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="text-4xl font-bold"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-center px-4"
           >
             CoffeeCraft ☕
           </motion.h1>

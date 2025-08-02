@@ -14,7 +14,7 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
       animate="animate"
       exit="exit"
       transition={{ duration: 0.4, ease: 'easeInOut' }}
-      className="min-h-[calc(100vh-80px)] px-4 py-6"
+      className="min-h-[calc(100vh-80px)] px-3 sm:px-4 md:px-6 py-4 sm:py-6"
     >
       {children}
     </motion.div>

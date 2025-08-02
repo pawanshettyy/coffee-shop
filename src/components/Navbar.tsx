@@ -86,8 +86,8 @@ export default function Navbar() {
             : 'bg-coffee/95 backdrop-blur-sm'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
             
             {/* Logo */}
             <motion.div
@@ -98,8 +98,8 @@ export default function Navbar() {
               <Link to="/" className="flex items-center space-x-2 group">
                 <div className="relative">
                   <Coffee 
-                    size={28} 
-                    className={`transition-colors duration-300 ${
+                    size={24} 
+                    className={`sm:w-7 sm:h-7 transition-colors duration-300 ${
                       scrolled ? 'text-coffee' : 'text-cream'
                     } group-hover:text-accent`}
                   />
@@ -109,7 +109,7 @@ export default function Navbar() {
                     transition={{ repeat: Infinity, duration: 2 }}
                   />
                 </div>
-                <span className={`text-xl lg:text-2xl font-bold transition-colors duration-300 ${
+                <span className={`text-lg sm:text-xl lg:text-2xl font-bold transition-colors duration-300 ${
                   scrolled ? 'text-coffee' : 'text-cream'
                 } group-hover:text-accent`}>
                   CoffeeCraft
@@ -248,11 +248,11 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-cream shadow-2xl z-50 md:hidden"
+              className="fixed top-0 right-0 h-full w-72 max-w-[90vw] bg-cream shadow-2xl z-50 md:hidden"
             >
               <div className="flex flex-col h-full">
                 {/* Mobile Header */}
-                <div className="flex items-center justify-between p-6 border-b border-accent/20">
+                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-accent/20">
                   <div className="flex items-center space-x-2">
                     <Coffee size={24} className="text-coffee" />
                     <span className="text-lg font-bold text-coffee">CoffeeCraft</span>
@@ -268,7 +268,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Mobile Navigation */}
-                <nav className="flex-1 px-6 py-8">
+                <nav className="flex-1 px-4 sm:px-6 py-6 sm:py-8">
                   <ul className="space-y-2">
                     {navLinks.map((link, index) => (
                       <motion.li
@@ -362,7 +362,7 @@ export default function Navbar() {
       </AnimatePresence>
 
       {/* Spacer to prevent content from hiding behind fixed navbar */}
-      <div className="h-16 lg:h-20" />
+      <div className="h-14 sm:h-16 lg:h-20" />
       
       <BackendModal />
     </>

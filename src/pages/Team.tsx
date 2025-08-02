@@ -148,7 +148,7 @@ export default function Team() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center py-12 lg:py-20"
+          className="text-center py-8 md:py-12 lg:py-20"
         >
           <motion.div
             initial={{ scale: 0.9 }}
@@ -182,15 +182,15 @@ export default function Team() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="py-12 mb-16"
+          className="py-6 md:py-8 lg:py-12 mb-8 md:mb-12 lg:mb-16"
         >
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto px-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto px-4">
             {teamStats.map((stat) => (
               <motion.div
                 key={stat.label}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="bg-white rounded-2xl p-4 md:p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 rounded-xl mb-4">
                   <stat.icon className="text-accent" size={24} />
@@ -209,9 +209,9 @@ export default function Team() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="py-12"
+          className="py-6 md:py-8 lg:py-12"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 max-w-7xl mx-auto px-4">
             {teamData.map((member) => (
               <motion.div
                 key={member.id}
@@ -379,11 +379,11 @@ export default function Team() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="py-20 text-center"
+          className="py-8 md:py-12 lg:py-20 text-center"
         >
-          <div className="bg-gradient-to-r from-coffee to-accent rounded-3xl p-12 mx-4 text-white">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Join Our Team</h2>
-            <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
+          <div className="bg-gradient-to-r from-coffee to-accent rounded-3xl p-6 md:p-8 lg:p-12 mx-4 text-white">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Join Our Team</h2>
+            <p className="text-base md:text-lg mb-6 md:mb-8 opacity-90 max-w-2xl mx-auto">
               Are you passionate about coffee? We're always looking for talented individuals 
               to join our growing family of coffee enthusiasts.
             </p>
