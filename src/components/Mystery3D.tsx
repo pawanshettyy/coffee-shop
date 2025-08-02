@@ -1,24 +1,49 @@
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
-import { Suspense } from 'react'
-
-function CoffeeModel() {
-  const gltf = useGLTF('/models/coffee-cup.glb')
-  return <primitive object={gltf.scene} scale={4.5} position={[0, -1, 0]} />
-}
+import { useState, useEffect } from 'react'
 
 export default function Mystery3D() {
+  const [rotation, setRotation] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotation(prev => prev + 1)
+    }, 50)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <div className="h-[500px] bg-cream border border-accent rounded-xl shadow-lg overflow-hidden">
-      <Canvas camera={{ position: [0, 1, 3.5], fov: 40 }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[3, 4, 5]} intensity={1.2} />
-        <Suspense fallback={null}>
-          <CoffeeModel />
-          <Environment preset="city" />
-        </Suspense>
-        <OrbitControls enableZoom={false} autoRotate />
-      </Canvas>
+    <div className="h-[500px] bg-cream border border-accent rounded-xl shadow-lg overflow-hidden flex items-center justify-center relative">
+      {/* Coffee cup emoji with CSS animation instead of 3D */}
+      <div 
+        className="text-[120px] transition-transform duration-75"
+        style={{ transform: `rotate(${rotation}deg)` }}
+      >
+        ☕
+      </div>
+      
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-accent/20 rounded-full animate-pulse"
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${30 + (i % 3) * 20}%`,
+              animationDelay: `${i * 0.5}s`
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* Interactive overlay */}
+      <div className="absolute bottom-4 left-4 right-4 text-center">
+        <p className="text-coffee/70 text-sm">
+          Interactive Coffee Experience
+        </p>
+        <p className="text-coffee/50 text-xs mt-1">
+          Hover to see the magic ✨
+        </p>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Coffee, Star, Users, Award, ArrowRight, Play, Heart, Clock, MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -8,19 +8,7 @@ import ImageGrid from '../components/ImageGrid'
 import Marquee from '../components/Marquee'
 import ScrollText from '../components/ScrollText'
 import TeamSection from '../components/TeamSection'
-
-// Lazy load heavy 3D component
-const Mystery3D = lazy(() => import('../components/Mystery3D'))
-
-// 3D Component fallback
-const Mystery3DFallback = () => (
-  <div className="h-[500px] bg-cream border border-accent rounded-xl shadow-lg overflow-hidden flex items-center justify-center">
-    <div className="text-center">
-      <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-coffee/60">Loading 3D Experience...</p>
-    </div>
-  </div>
-)
+import Mystery3D from '../components/Mystery3D'
 
 // Hero stats data
 const heroStats = [
@@ -521,9 +509,7 @@ export default function Home() {
                 Explore our 3D coffee experience - drag to rotate and discover the art of coffee making
               </p>
             </motion.div>
-            <Suspense fallback={<Mystery3DFallback />}>
-              <Mystery3D />
-            </Suspense>
+            <Mystery3D />
           </div>
         </section>
 

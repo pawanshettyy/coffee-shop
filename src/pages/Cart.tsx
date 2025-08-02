@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ShoppingCart, 
@@ -21,6 +21,7 @@ import PageWrapper from '../components/PageWrapper'
 import LazyImage from '../components/LazyImage'
 import { useCart } from '../hooks/useCart'
 import { type CouponCode } from '../context/CartContext'
+import { preloadImage } from '../utils/imageOptimization'
 
 // Image imports
 import vanillaLatteImage from '/images/menu-iced-vanilla-latte.jpg'
@@ -89,6 +90,24 @@ export default function Cart() {
     subtotal,
     savings
   } = useCart()
+
+  // Preload cart item images and recommended item images only when needed
+  useEffect(() => {
+    // Preload cart item images with high priority (only if there are items)
+    if (cartItems.length > 0) {
+      cartItems.forEach(item => preloadImage(item.image, 'high'))
+    }
+    
+    // Only preload recommended item images if cart has items and after a delay
+    if (cartItems.length > 0) {
+      const timer = setTimeout(() => {
+        const recommendedImages = [vanillaLatteImage, blueberryMuffinImage, coldBrewImage]
+        recommendedImages.forEach(src => preloadImage(src, 'low'))
+      }, 1500) // Delay to ensure cart images load first
+      
+      return () => clearTimeout(timer)
+    }
+  }, [cartItems])
   
   const couponDiscount = appliedCoupon 
     ? appliedCoupon.type === 'percentage' 

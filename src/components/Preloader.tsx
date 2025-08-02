@@ -49,7 +49,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-3xl font-bold text-coffee"
           >
-            Brew & Bite
+            CoffeeCraft
           </motion.h1>
           
           <motion.p

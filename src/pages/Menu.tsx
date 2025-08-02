@@ -1,10 +1,21 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Coffee, Filter, Star, Heart, ShoppingCart, Plus, Minus, Search, Clock, Thermometer } from 'lucide-react'
 import PageWrapper from '../components/PageWrapper'
 import LazyImage from '../components/LazyImage'
 import { useCart } from '../hooks/useCart'
+import { preloadImage } from '../utils/imageOptimization'
+
+// Image imports
+import espressoImage from '/images/menu-espresso.jpg'
+import caramelMacchiatoImage from '/images/menu-caramel-macchiato.jpg'
+import vanillaLatteImage from '/images/menu-iced-vanilla-latte.jpg'
+import coldBrewImage from '/images/menu-cold-brew.jpg'
+import chocolateCroissantImage from '/images/menu-chocolate-croissant.jpg'
+import cappuccinoImage from '/images/menu-cappuccino.jpg'
+import matchaLatteImage from '/images/menu-matcha-latte.jpg'
+import blueberryMuffinImage from '/images/menu-blueberry-muffin.jpg'
 
 // Type definitions
 interface Size {
@@ -52,7 +63,7 @@ const menuItems: MenuItem[] = [
     price: 299,
     originalPrice: null,
     description: 'Rich, full-bodied espresso shot with a perfect golden crema',
-    image: '/images/menu-espresso.jpg',
+    image: espressoImage,
     rating: 4.8,
     reviews: 124,
     prepTime: '2-3 min',
@@ -73,7 +84,7 @@ const menuItems: MenuItem[] = [
     price: 449,
     originalPrice: 499,
     description: 'Espresso with steamed milk, vanilla syrup, and caramel drizzle',
-    image: '/images/menu-caramel-macchiato.jpg',
+    image: caramelMacchiatoImage,
     rating: 4.9,
     reviews: 89,
     prepTime: '4-5 min',
@@ -95,7 +106,7 @@ const menuItems: MenuItem[] = [
     price: 399,
     originalPrice: null,
     description: 'Smooth espresso with cold milk and vanilla syrup over ice',
-    image: '/images/menu-iced-vanilla-latte.jpg',
+    image: vanillaLatteImage,
     rating: 4.7,
     reviews: 156,
     prepTime: '3-4 min',
@@ -116,7 +127,7 @@ const menuItems: MenuItem[] = [
     price: 349,
     originalPrice: null,
     description: 'Smooth, less acidic coffee brewed cold for 12 hours',
-    image: '/images/menu-cold-brew.jpg',
+    image: coldBrewImage,
     rating: 4.6,
     reviews: 78,
     prepTime: '1-2 min',
@@ -137,7 +148,7 @@ const menuItems: MenuItem[] = [
     price: 299,
     originalPrice: null,
     description: 'Flaky, buttery croissant filled with rich dark chocolate',
-    image: '/images/menu-chocolate-croissant.jpg',
+    image: chocolateCroissantImage,
     rating: 4.5,
     reviews: 92,
     prepTime: '2-3 min',
@@ -155,7 +166,7 @@ const menuItems: MenuItem[] = [
     price: 549,
     originalPrice: null,
     description: 'Our house blend with perfectly steamed milk and artistic foam',
-    image: '/images/menu-cappuccino.jpg',
+    image: cappuccinoImage,
     rating: 4.9,
     reviews: 203,
     prepTime: '5-6 min',
@@ -176,7 +187,7 @@ const menuItems: MenuItem[] = [
     price: 499,
     originalPrice: null,
     description: 'Premium matcha powder with steamed milk and light sweetness',
-    image: '/images/menu-matcha-latte.jpg',
+    image: matchaLatteImage,
     rating: 4.4,
     reviews: 67,
     prepTime: '4-5 min',
@@ -197,7 +208,7 @@ const menuItems: MenuItem[] = [
     price: 249,
     originalPrice: null,
     description: 'Fresh baked muffin bursting with juicy blueberries',
-    image: '/images/menu-blueberry-muffin.jpg',
+    image: blueberryMuffinImage,
     rating: 4.3,
     reviews: 45,
     prepTime: '1-2 min',
@@ -220,6 +231,26 @@ export default function Menu() {
   
   const { addToCart: addToCartContext, cartItems, subtotal } = useCart()
   const navigate = useNavigate()
+
+  // Preload menu images for faster loading - very conservative approach
+  useEffect(() => {
+    // Only preload the first 2 visible menu item images with high priority
+    const timer = setTimeout(() => {
+      const visibleImages = menuItems.slice(0, 2).map(item => item.image)
+      visibleImages.forEach(src => preloadImage(src, 'high'))
+    }, 500) // Small delay to ensure page is loaded
+    
+    // Preload next batch of images with low priority after a longer delay
+    const timer2 = setTimeout(() => {
+      const nextBatchImages = menuItems.slice(2, 6).map(item => item.image)
+      nextBatchImages.forEach(src => preloadImage(src, 'low'))
+    }, 3000) // Longer delay to ensure images are actually needed
+    
+    return () => {
+      clearTimeout(timer)
+      clearTimeout(timer2)
+    }
+  }, [])
 
   // Memoized filter and sort menu items for better performance
   const filteredItems = useMemo(() => {
@@ -430,8 +461,8 @@ export default function Menu() {
           className="py-12"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto px-4 auto-rows-fr">
-            <AnimatePresence mode="wait">
-              {filteredItems.map((item) => (
+            <AnimatePresence>
+              {filteredItems.map((item, index) => (
                 <motion.div
                   key={item.id}
                   variants={itemVariants}
@@ -445,9 +476,10 @@ export default function Menu() {
                     <LazyImage
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full transition-transform duration-500 group-hover:scale-110"
-                      fallback={`https://images.unsplash.com/photo-${1500000000000 + item.id}?w=400&h=300&fit=crop`}
-                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      fallback="/images/coffee-cup.jpg"
+                      loading={index < 2 ? "eager" : "lazy"}
+                      priority={index < 2}
                     />
                     
                     {/* Badges */}

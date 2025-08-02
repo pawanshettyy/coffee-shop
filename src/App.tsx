@@ -1,66 +1,64 @@
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CartProvider } from './context/CartContext'
-import { lazy } from 'react'
+import { preloadImages, CRITICAL_IMAGES, NON_CRITICAL_IMAGES } from './utils/imageOptimization'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Preloader from './components/Preloader'
 
-// Lazy load pages for better performance
-const Home = lazy(() => import('./pages/Home'))
-const Menu = lazy(() => import('./pages/Menu'))
-const Team = lazy(() => import('./pages/Team'))
-const Cart = lazy(() => import('./pages/Cart'))
-const Contact = lazy(() => import('./pages/Contact'))
-const NotFound = lazy(() => import('./pages/NotFound'))
-
-// Loading fallback component
-const PageFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-cream">
-    <div className="text-center">
-      <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-coffee/60">Loading...</p>
-    </div>
-  </div>
-)
+// Import pages directly (no lazy loading to avoid issues)
+import Home from './pages/Home'
+import Menu from './pages/Menu'
+import Team from './pages/Team'
+import Cart from './pages/Cart'
+import Contact from './pages/Contact'
+import NotFound from './pages/NotFound'
 
 function AppContent() {
   const [isLoaded, setIsLoaded] = useState(false)
   const location = useLocation()
 
-  // Preload only critical above-the-fold images
+  // Optimized image preloading based on current route
   useEffect(() => {
-    const criticalImages = [
-      '/images/hero-coffee-main.jpg'  // Only preload hero image
-    ]
+    // Only preload hero images when on home page
+    if (location.pathname === '/') {
+      preloadImages(
+        CRITICAL_IMAGES.map(src => ({ src, priority: 'high' }))
+      )
+      
+      // Prefetch other home page images after delay
+      const prefetchTimer = setTimeout(() => {
+        preloadImages(
+          NON_CRITICAL_IMAGES.slice(0, 6).map(src => ({ src, priority: 'low' }))
+        )
+      }, 2000)
+      
+      return () => clearTimeout(prefetchTimer)
+    }
+  }, [location.pathname])
 
-    const preloadImages = criticalImages.map(src => {
-      return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = resolve
-        img.onerror = reject
-        img.src = src
-      })
-    })
-
-    Promise.allSettled(preloadImages).then(() => {
-      // Critical images preloaded
-    })
-
-    // Preload route components on idle
+  // Preload route components only after initial load
+  useEffect(() => {
     const preloadRoutes = () => {
-      import('./pages/Menu')
-      import('./pages/Cart')
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          import('./pages/Menu')
+          import('./pages/Cart')
+        }, { timeout: 2000 })
+        
+        // Preload less critical routes even later
+        setTimeout(() => {
+          import('./pages/Team')
+          import('./pages/Contact')
+        }, 4000)
+      }
     }
 
-    // Use requestIdleCallback if available, otherwise setTimeout
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(preloadRoutes)
-    } else {
-      setTimeout(preloadRoutes, 1000)
-    }
+    // Start route preloading after a delay
+    const timer = setTimeout(preloadRoutes, 2000)
+    return () => clearTimeout(timer)
   }, [])
 
   const handleLoadComplete = () => {
@@ -82,16 +80,14 @@ function AppContent() {
         >
           <Navbar />
           <AnimatePresence mode="wait">
-            <Suspense fallback={<PageFallback />}>
-              <Routes location={location} key={location.pathname}>
-                <Route path="/" element={<Home />} />
-                <Route path="/menu" element={<Menu />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </AnimatePresence>
           <Footer />
         </motion.div>

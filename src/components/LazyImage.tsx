@@ -9,6 +9,9 @@ interface LazyImageProps {
   fallback?: string
   onLoad?: () => void
   onError?: () => void
+  blurDataURL?: string
+  sizes?: string
+  srcSet?: string
 }
 
 export default function LazyImage({ 
@@ -19,14 +22,38 @@ export default function LazyImage({
   priority = false,
   fallback,
   onLoad,
-  onError
+  onError,
+  blurDataURL,
+  sizes = '100vw',
+  srcSet
 }: LazyImageProps) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
   const [isInView, setIsInView] = useState(priority || loading === 'eager')
+  const [currentSrc, setCurrentSrc] = useState<string>(blurDataURL || '')
   const imgRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // Preload critical images immediately
+  useEffect(() => {
+    if (priority) {
+      const link = document.createElement('link')
+      link.rel = 'preload'
+      link.as = 'image'
+      link.href = src
+      if (srcSet) link.setAttribute('imagesrcset', srcSet)
+      if (sizes) link.setAttribute('imagesizes', sizes)
+      document.head.appendChild(link)
+      
+      return () => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link)
+        }
+      }
+    }
+  }, [src, srcSet, sizes, priority])
+
+  // Intersection Observer for lazy loading
   useEffect(() => {
     if (!priority && loading === 'lazy' && containerRef.current) {
       const observer = new IntersectionObserver(
@@ -37,8 +64,8 @@ export default function LazyImage({
           }
         },
         {
-          rootMargin: '50px',
-          threshold: 0.1
+          rootMargin: '100px', // Load images 100px before they enter viewport
+          threshold: 0.01
         }
       )
       
@@ -50,80 +77,102 @@ export default function LazyImage({
     }
   }, [priority, loading])
 
+  // Progressive image loading with better performance
   useEffect(() => {
-    const img = imgRef.current
-    if (!img || !isInView) return
-
-    const handleLoad = () => {
-      setIsLoaded(true)
-      onLoad?.()
+    if (isInView && src) {
+      const img = new Image()
+      
+      // Performance optimizations
+      img.decoding = 'async'
+      img.fetchPriority = priority ? 'high' : 'auto'
+      
+      img.onload = () => {
+        setCurrentSrc(src)
+        setIsLoaded(true)
+        setHasError(false)
+        onLoad?.()
+      }
+      
+      img.onerror = () => {
+        setHasError(true)
+        if (fallback) {
+          setCurrentSrc(fallback)
+          setIsLoaded(true)
+        }
+        onError?.()
+      }
+      
+      // Set responsive image attributes
+      if (srcSet) img.srcset = srcSet
+      if (sizes) img.sizes = sizes
+      img.src = src
+      
+      // Cleanup function
+      return () => {
+        img.onload = null
+        img.onerror = null
+      }
     }
-    
-    const handleError = () => {
-      setHasError(true)
-      onError?.()
-    }
+  }, [isInView, src, srcSet, sizes, fallback, priority, onLoad, onError])
 
-    // If image is already cached, it will load immediately
-    if (img.complete && img.naturalWidth > 0) {
-      setIsLoaded(true)
-    } else {
-      img.addEventListener('load', handleLoad)
-      img.addEventListener('error', handleError)
-    }
-
-    return () => {
-      img.removeEventListener('load', handleLoad)
-      img.removeEventListener('error', handleError)
-    }
-  }, [src, isInView, onLoad, onError])
-
-  // Memory optimization: cleanup on unmount
+  // Memory cleanup on unmount
   useEffect(() => {
-    const currentImg = imgRef.current
+    const imgElement = imgRef.current
     return () => {
-      if (currentImg) {
-        currentImg.src = ''
-        currentImg.removeAttribute('src')
+      if (imgElement) {
+        imgElement.src = ''
+        imgElement.removeAttribute('src')
       }
     }
   }, [])
 
-  const imageSrc = hasError && fallback ? fallback : src
+  const displaySrc = currentSrc || src
 
   if (hasError && !fallback) {
     return (
       <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
-        <span className="text-gray-500 text-sm">Failed to load image</span>
+        <span className="text-gray-500 text-sm">Image unavailable</span>
       </div>
     )
   }
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden w-full h-full">
-      {/* Skeleton/Placeholder */}
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse">
-          <div className="flex items-center justify-center h-full">
+    <div ref={containerRef} className="relative overflow-hidden">
+      {/* Blur placeholder */}
+      {blurDataURL && !isLoaded && (
+        <img
+          src={blurDataURL}
+          alt=""
+          className={`absolute inset-0 w-full h-full object-cover filter blur-sm scale-110 ${className}`}
+          style={{ zIndex: 1 }}
+        />
+      )}
+
+      {/* Loading skeleton */}
+      {!isLoaded && !blurDataURL && (
+        <div className={`bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse ${className}`}>
+          <div className="flex items-center justify-center h-full min-h-[200px]">
             <div className="w-8 h-8 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" />
           </div>
         </div>
       )}
 
-      {/* Actual Image */}
+      {/* Main image */}
       {isInView && (
         <img
           ref={imgRef}
-          src={imageSrc}
+          src={displaySrc}
+          srcSet={srcSet}
+          sizes={sizes}
           alt={alt}
           loading={loading}
           decoding="async"
-          className={`w-full h-full object-cover transition-opacity duration-500 ${
+          className={`transition-opacity duration-300 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           } ${className}`}
           style={{ 
-            minHeight: '100%',
-            objectFit: 'cover'
+            zIndex: 2,
+            position: 'relative'
           }}
         />
       )}
