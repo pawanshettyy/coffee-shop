@@ -276,10 +276,7 @@ This project is created for hackathon purposes. For commercial use, please conta
 
 ## 🙏 Acknowledgments
 
-* **Framer Motion** team for excellent animation library
-* **Tailwind CSS** for utility-first CSS framework
-* **Lucide** for beautiful iconography
-* **React team** for the amazing framework
+* **Thanks ACM SIGAI & Team for this opportunity**
 
 ---
 
