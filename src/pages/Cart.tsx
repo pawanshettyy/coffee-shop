@@ -294,12 +294,14 @@ export default function Cart() {
                       <div className="flex flex-col sm:flex-row gap-6">
                         {/* Image */}
                         <div className="flex-shrink-0">
-                          <LazyImage
-                            src={item.image}
-                            alt={item.name}
-                            className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl"
-                            priority={true}
-                          />
+                          <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gray-100 rounded-xl overflow-hidden">
+                            <LazyImage
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                              priority={true}
+                            />
+                          </div>
                         </div>
 
                         {/* Details */}
@@ -385,12 +387,14 @@ export default function Cart() {
                       whileHover={{ y: -4 }}
                       className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all cursor-pointer"
                     >
-                      <LazyImage
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-32 rounded-lg mb-3"
-                        loading="lazy"
-                      />
+                      <div className="w-full h-32 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                        <LazyImage
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
                       <h4 className="font-semibold text-coffee mb-1">{item.name}</h4>
                       <div className="flex items-center justify-between">
                         <span className="text-accent font-bold">₹{item.price}</span>

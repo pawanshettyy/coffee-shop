@@ -427,7 +427,7 @@ export default function Menu() {
           animate="visible"
           className="py-12"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto px-4 auto-rows-fr">
             <AnimatePresence mode="wait">
               {filteredItems.map((item) => (
                 <motion.div
@@ -435,15 +435,15 @@ export default function Menu() {
                   variants={itemVariants}
                   layout
                   whileHover={{ y: -8, scale: 1.02 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group h-full flex flex-col"
                   onClick={() => setSelectedItem(item.id)}
                 >
                   {/* Image */}
-                  <div className="relative overflow-hidden">
+                  <div className="relative overflow-hidden h-48 bg-gray-100">
                     <LazyImage
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-48 transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full transition-transform duration-500 group-hover:scale-110"
                       fallback={`https://images.unsplash.com/photo-${1500000000000 + item.id}?w=400&h=300&fit=crop`}
                       loading="lazy"
                     />
@@ -482,12 +482,12 @@ export default function Menu() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-6 flex-1 flex flex-col">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-lg font-bold text-coffee group-hover:text-accent transition-colors">
                         {item.name}
                       </h3>
-                      <div className="text-right">
+                      <div className="text-right flex-shrink-0">
                         <div className="text-lg font-bold text-accent">
                           ₹{item.price.toFixed(0)}
                         </div>
@@ -499,7 +499,7 @@ export default function Menu() {
                       </div>
                     </div>
 
-                    <p className="text-coffee/70 text-sm mb-4 line-clamp-2">
+                    <p className="text-coffee/70 text-sm mb-4 flex-1 line-clamp-3">
                       {item.description}
                     </p>
 
@@ -525,7 +525,7 @@ export default function Menu() {
                         const defaultSize = item.sizes[0]?.name || 'Regular'
                         handleAddToCart(item, defaultSize)
                       }}
-                      className="w-full bg-accent hover:bg-accent/90 text-white py-2 rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
+                      className="w-full bg-accent hover:bg-accent/90 text-white py-2 rounded-xl font-medium transition-colors flex items-center justify-center space-x-2 mt-auto"
                     >
                       <ShoppingCart size={18} />
                       <span>Add to Cart</span>

@@ -87,10 +87,10 @@ export default function LazyImage({
   }
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
+    <div ref={containerRef} className="relative overflow-hidden w-full h-full">
       {/* Skeleton/Placeholder */}
       {!isLoaded && (
-        <div className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse ${className}`}>
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse">
           <div className="flex items-center justify-center h-full">
             <div className="w-8 h-8 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" />
           </div>
@@ -109,8 +109,8 @@ export default function LazyImage({
             isLoaded ? 'opacity-100' : 'opacity-0'
           } ${className}`}
           style={{ 
-            minHeight: isLoaded ? 'auto' : '200px',
-            backgroundColor: '#f3f3f3'
+            minHeight: '100%',
+            objectFit: 'cover'
           }}
         />
       )}

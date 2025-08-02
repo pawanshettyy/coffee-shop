@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { CartProvider } from './context/CartContext'
 
 import Navbar from './components/Navbar'
@@ -47,9 +47,17 @@ function AppContent() {
 
   return (
     <>
-      <Preloader onComplete={handleLoadComplete} />
+      <AnimatePresence>
+        {!isLoaded && <Preloader onComplete={handleLoadComplete} />}
+      </AnimatePresence>
+      
       {isLoaded && (
-        <div className="bg-cream min-h-screen text-coffee font-sans">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-cream min-h-screen text-coffee font-sans"
+        >
           <Navbar />
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -62,7 +70,7 @@ function AppContent() {
             </Routes>
           </AnimatePresence>
           <Footer />
-        </div>
+        </motion.div>
       )}
     </>
   )
