@@ -3,10 +3,16 @@
 > **Hackathon Project** : A modern, interactive coffee shop web application built with cutting-edge technologies
 
 ![CoffeeCraft Logo](https://img.shields.io/badge/CoffeeCraft-Premium%20Coffee-C69C6D?style=for-the-badge&logo=coffee)
+[![Vercel Deploy](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel)](https://coffeecraft.vercel.app)
+[![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)]()
 
 ## 🏆 Hackathon : "PixxelHack Hackathon 2025"
 
 CoffeeCraft revolutionizes the traditional coffee shop experience by combining stunning visual design with interactive elements, creating an immersive digital coffee journey that makes users feel like they're stepping into a premium café.
+
+## 🚀 Live Demo
+
+Visit the live application: **[CoffeeCraft on Vercel](https://coffeecraft.vercel.app)**
 
 ---
 
@@ -274,7 +280,43 @@ This project is created for hackathon purposes. For commercial use, please conta
 
 ---
 
-## 🙏 Acknowledgments
+## � Deployment
+
+### Vercel Deployment (Recommended)
+
+This project is optimized for Vercel deployment:
+
+1. **Fork/Clone** this repository
+2. **Connect** your repository to Vercel
+3. **Deploy** with these settings:
+   - Framework Preset: `Vite`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm install`
+
+### Manual Deployment
+
+```bash
+# Build for production
+npm run build
+
+# Preview the build locally
+npm run preview
+
+# Deploy the 'dist' folder to your hosting provider
+```
+
+### Performance Features
+
+- ⚡ **Code Splitting**: Lazy-loaded pages and optimized chunks
+- 🎯 **Image Optimization**: Strategic preloading and lazy loading
+- 📦 **Bundle Analysis**: Optimized vendor and animation chunks
+- 🔄 **Caching**: Aggressive caching for static assets
+- 🎨 **Modern Build**: ESNext target for better performance
+
+---
+
+## �🙏 Acknowledgments
 
 * **Thanks ACM SIGAI & Team for this opportunity**
 
@@ -287,5 +329,6 @@ This project is created for hackathon purposes. For commercial use, please conta
 [![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
 [![Styled with Tailwind](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![Animated with Framer](https://img.shields.io/badge/Animated%20with-Framer%20Motion-0055FF?style=flat-square&logo=framer)](https://www.framer.com/motion/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=flat-square&logo=vercel)](https://vercel.com)
 
 </div>

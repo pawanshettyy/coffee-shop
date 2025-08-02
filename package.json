@@ -1,13 +1,17 @@
 {
-  "name": "coffee-shop",
+  "name": "coffeecraft",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "CoffeeCraft - Premium coffee shop experience with interactive menu and elegant design",
+  "keywords": ["coffee", "restaurant", "menu", "react", "vite", "typescript"],
+  "author": "Pawan Shetty",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.2",
